@@ -9,6 +9,7 @@
   "author": "Bogusz Napierała",
   "license": "ISC",
   "dependencies": {
+    "bcrypt": "^3.0.6",
     "dotenv": "^7.0.0",
     "express": "^4.16.4",
     "mongoose": "^5.5.2",
