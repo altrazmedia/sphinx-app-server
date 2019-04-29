@@ -2,7 +2,10 @@ const express  = require("express");
 const mongoose = require("mongoose");
 
 const { Subject }     = require("../models/Subject");
+
 const asyncMiddleware = require("../middleware/asyncMiddleware");
+const auth  = require("../middleware/auth");
+const roles = require("../middleware/roles");
 
 const router = express.Router();
 
@@ -18,7 +21,7 @@ router.get("/", asyncMiddleware(async (req, res) => {
 /**
  * Creating a new subject
  */
-router.post("/", asyncMiddleware(async (req, res) => {
+router.post("/", auth, roles("admin"), asyncMiddleware(async (req, res) => {
   const { name, code } = req.body;
 
   const missingFields = [];
@@ -66,7 +69,7 @@ router.get("/:id", asyncMiddleware(async (req, res) => {
 /**
  * Editing the subject
  */
-router.put("/:id", asyncMiddleware(async (req, res) => {
+router.put("/:id", auth, roles("admin"), asyncMiddleware(async (req, res) => {
   const { id } = req.params;
   const { name, code } = req.body;
 
