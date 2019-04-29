@@ -4,6 +4,7 @@ const bcrypt   = require("bcrypt");
 const { User }        = require("../models/User");
 const { Session }     = require("../models/Session");
 const asyncMiddleware = require("../middleware/asyncMiddleware");
+const auth            = require("../middleware/auth");
 
 const router = express.Router();
 
@@ -40,9 +41,26 @@ router.post("/", asyncMiddleware(async (req, res) => {
   let session = new Session({ user: user._id, expiry: SESSION_EXPIRY_IN_DAYS * 24 * 60 * 60 * 1000 });
   session = await session.save();
 
-  return res.send(session);
+  return res.send({ session_id: session._id, expiry: session.expiry });
 
 }));
+
+
+/**
+ * Logging out - removing the session
+ */
+router.delete("/", auth, async (req, res) => {
+
+  const { session_id } = req.headers;
+
+  const session = await Session.findOneAndDelete({ _id: session_id });
+  if (!session) {
+    return res.status(404).send({ notfound: "session" })
+  }
+
+  return res.send();
+  
+})
 
 
 module.exports = router;
