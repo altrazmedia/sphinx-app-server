@@ -29,9 +29,21 @@ const userSchema = new mongoose.Schema({
     type: Boolean,
     default: true
   }
-})
+});
+
+userSchema.methods.getPublicFields = function() {
+  return {
+    email: this.email,
+    roles: this.roles,
+    label: this.label,
+    active: this.active,
+    _id: this._id
+  }
+}
+
 
 const User = mongoose.model("User", userSchema);
+
 
 module.exports = { User, userSchema };
 
