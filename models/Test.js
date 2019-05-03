@@ -23,8 +23,20 @@ const testSchema = new mongoose.Schema({
     active: true
   },
   questions: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Question"
+    content: {
+      type: String,
+      required: true,
+    },
+    options: [{
+      content: {
+        type: String,
+        required: true
+      },
+      correct: {
+        type: Boolean,
+        default: false
+      }
+    }]
   }]
 });
 
