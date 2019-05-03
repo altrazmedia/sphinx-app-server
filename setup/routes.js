@@ -9,14 +9,18 @@ const users    = require("../routes/users");
 const groups   = require("../routes/groups");
 const classes  = require("../routes/classes");
 const tests    = require("../routes/tests");
+const me       = require("../routes/me");
 
 module.exports = function(app) {
   app.use(express.json());
   
+  app.use("/api/session", session);
+  
+  app.use("/api/me", auth);
+  app.use("/api/me", me);
+  
   app.use("/api/subjects", auth);
   app.use("/api/subjects", subjects);
-
-  app.use("/api/session", session);
 
   app.use("/api/users", auth);
   app.use("/api/users", users);
