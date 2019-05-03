@@ -4,11 +4,14 @@ const classesSchema = new mongoose.Schema({
   code: {
     type: String,
     unique: true,
-    required: true
+    required: true,
+    lowercase: true,
+    trim: true
   },
   name: {
     type: String,
-    required: true
+    required: true,
+    trim: true
   },
   group: {
     type: mongoose.Schema.Types.ObjectId,

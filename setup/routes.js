@@ -7,6 +7,7 @@ const subjects = require("../routes/subjects");
 const session  = require("../routes/session");
 const users    = require("../routes/users");
 const groups   = require("../routes/groups");
+const classes  = require("../routes/classes");
 
 module.exports = function(app) {
   app.use(express.json());
@@ -21,6 +22,9 @@ module.exports = function(app) {
 
   app.use("/api/groups", auth);
   app.use("/api/groups", groups);
+
+  app.use("/api/classes", auth);
+  app.use("/api/classes", classes);
 
   app.use(error); // Error middleware
 }
