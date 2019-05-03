@@ -8,11 +8,6 @@ const classesSchema = new mongoose.Schema({
     lowercase: true,
     trim: true
   },
-  name: {
-    type: String,
-    required: true,
-    trim: true
-  },
   group: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Group",

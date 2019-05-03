@@ -45,12 +45,10 @@ router.post("/", roles([ "admin" ]), asyncMiddleware(async (req, res) => {
     teacher,  // User id
     group,    // Group code
     subject,  // Subject code
-    name,     // Classes name
     code      // unique classes code
   } = req.body;
 
   const missingFields = [];
-  if (!name || typeof name !== "string") { missingFields.push("name"); }
   if (!code || typeof code !== "string") { missingFields.push("code"); }
   if (!group || typeof group !== "string") { missingFields.push("group"); }
   if (!subject || typeof subject !== "string") { missingFields.push("subject"); }
@@ -89,7 +87,6 @@ router.post("/", roles([ "admin" ]), asyncMiddleware(async (req, res) => {
 
   let classes = new Classes({
     code,
-    name,
     teacher,
     group: matchedGroup._id,
     subject: matchedSubject._id
