@@ -4,7 +4,9 @@ const subjectSchema = new mongoose.Schema({
   code: {
     type: String,
     unique: true,
-    required: true
+    required: true,
+    trim: true,
+    lowercase: true
   },
   name: {
     type: String,

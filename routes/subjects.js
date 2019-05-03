@@ -1,7 +1,8 @@
 const express  = require("express");
 const mongoose = require("mongoose");
 
-const { Subject }     = require("../models/Subject");
+const { Subject } = require("../models/Subject");
+const errors      = require("../utils/errorResponses");
 
 const asyncMiddleware = require("../middleware/asyncMiddleware");
 const auth  = require("../middleware/auth");
@@ -13,7 +14,11 @@ const router = express.Router();
  * Getting the list of subjects
  */
 router.get("/", asyncMiddleware(async (req, res) => {
-  const subjects = await Subject.find().sort("name")
+
+  const subjects = await Subject
+    .find()
+    .sort("name");
+
   res.send(subjects);
 }));
 
@@ -48,18 +53,18 @@ router.post("/", auth, roles("admin"), asyncMiddleware(async (req, res) => {
 
 
 /**
- * Getting the subject by id
+ * Getting the subject by code
  */
-router.get("/:id", asyncMiddleware(async (req, res) => {
-  const { id } = req.params;
+router.get("/:code", asyncMiddleware(async (req, res) => {
+  const { code } = req.params;
 
-  if (!mongoose.Types.ObjectId.isValid(id)){
-    return res.status(404).send({ notfound: [ "subject" ] });
+  if (!code) {
+    return errors.notFound(res, [ "subject" ])
   }
 
-  const subject = await Subject.findById(id);
+  const subject = await Subject.findOne({ code: code.toLowerCase().trim() });
   if (!subject) {
-    return res.status(404).send({ notfound: [ "subject" ] });
+    return errors.notFound(res, [ "subject" ])
   }
 
   return res.send(subject);
@@ -69,37 +74,37 @@ router.get("/:id", asyncMiddleware(async (req, res) => {
 /**
  * Editing the subject
  */
-router.put("/:id", auth, roles("admin"), asyncMiddleware(async (req, res) => {
-  const { id } = req.params;
-  const { name, code } = req.body;
+router.put("/:code", auth, roles("admin"), asyncMiddleware(async (req, res) => {
+  const { code } = req.params;
+  const { name, code: newCode } = req.body;
 
   const uncorrectTypes = [];
   if (name && typeof name !== "string") { uncorrectTypes.push("name"); }
-  if (code && typeof code !== "string") { uncorrectTypes.push("code"); }
+  if (newCode && typeof newCode !== "string") { uncorrectTypes.push("code"); }
   if (uncorrectTypes.length > 0) {
-    return res.status(400).send({ type: uncorrectTypes })
+    return errors.requiredFields(res, uncorrectTypes);
   }
 
-  if (code) {
-    const subjectByCode = await Subject.findOne({ code });
-    if (subjectByCode && String(subjectByCode._id) !== id) {
+  if (newCode && newCode.toLowerCase().trim() !== code.toLowerCase().trim()) {
+    const subjectByCode = await Subject.findOne({ code: newCode.toLowerCase().trim() });
+    if (subjectByCode) {
       // There already is another subject with that code
-      return res.status(409).send({ duplicate: [ "code" ] })
+      return errors.duplicate(res, [ "code" ])
     }
   }
   
 
-  if (!mongoose.Types.ObjectId.isValid(id)){
-    return res.status(404).send({ notfound: [ "subject" ] });
+  if (!code){
+    return errors.notFound(res, [ "subject" ]);
   }
 
-  let subject = await Subject.findById(id);
+  let subject = await Subject.findOne({ code: code.toLowerCase().trim() });
   if (!subject) {
-    return res.status(404).send({ notfound: [ "subject" ] });
+    return errors.notFound(res, [ "subject" ]);
   }
 
   subject.name = name || subject.name;
-  subject.code = code || subject.code;
+  subject.code = newCode || subject.code;
 
   subject = await subject.save();
 
