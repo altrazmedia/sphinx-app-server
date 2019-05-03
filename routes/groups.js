@@ -119,9 +119,9 @@ router.put("/:code", roles([ "admin" ]), asyncMiddleware(async (req, res) => {
     return errors.notFound(res, [ "group" ]);
   }
 
-  if (code_new) {
-    const matchedByCode = await Group.find({ code: code_new.toLowerCase().trim() });
-    if (matchedByCode.length > 1) {
+  if (code_new && code_new.toLowerCase().trim() !== code.toLowerCase().trim()) {
+    const matchedByCode = await Group.findOne({ code: code_new.toLowerCase().trim() });
+    if (matchedByCode) {
       // There already is a different group with that code
       return errors.duplicate(res, [ "code" ]);
     }
