@@ -6,6 +6,7 @@ const auth  = require("../middleware/auth");
 const subjects = require("../routes/subjects");
 const session  = require("../routes/session");
 const users    = require("../routes/users");
+const groups   = require("../routes/groups");
 
 module.exports = function(app) {
   app.use(express.json());
@@ -17,6 +18,9 @@ module.exports = function(app) {
 
   app.use("/api/users", auth);
   app.use("/api/users", users);
+
+  app.use("/api/groups", auth);
+  app.use("/api/groups", groups);
 
   app.use(error); // Error middleware
 }
