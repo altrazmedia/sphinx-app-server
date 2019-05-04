@@ -2,7 +2,7 @@ const express  = require("express");
 const mongoose = require("mongoose");
 
 const { Group }   = require("../models/Group");
-const { Test }    = require("../models/Test");
+const { TestSchema }    = require("../models/TestSchema");
 const { Subject } = require("../models/Subject");
 const { User }    = require("../models/User");
 const errors      = require("../utils/errorResponses");
@@ -15,7 +15,7 @@ const router = express.Router();
 
 router.get("/", roles([ "teacher", "admin" ]), asyncMiddleware(async (req, res) => {
 
-  const tests = await Test
+  const tests = await TestSchema
     .find()
     .populate("subject", "code name")
     .populate("author", "label")
@@ -62,7 +62,7 @@ router.post("/", roles([ "teacher", "admin" ]), asyncMiddleware(async (req, res)
 
 
 
-  let test = new Test({
+  let test = new TestSchema({
     name,
     description: description ? String(description) : undefined,
     author: __user._id,
@@ -71,7 +71,7 @@ router.post("/", roles([ "teacher", "admin" ]), asyncMiddleware(async (req, res)
   });
 
   test = await test.save();
-  test = await Test
+  test = await TestSchema
     .populate(test, [
       { path: "author", select: "label _id" },
       { path: "subject", select: "code name" }
@@ -95,7 +95,7 @@ router.get("/:id", roles([ "teacher", "admin" ]), asyncMiddleware(async (req, re
     return errors.notFound(res, [ "test" ]);
   }
 
-  const test = await Test
+  const test = await TestSchema
     .findById(id)
     .populate("author", "label _id")
     .populate("subject", "code name");
@@ -132,7 +132,7 @@ router.put("/:id", roles([ "teacher", "admin" ]), asyncMiddleware(async (req, re
   }
 
 
-  let test = await Test.findById(id);
+  let test = await TestSchema.findById(id);
   if (!test) {
     return errors.notFound(res, [ "test" ]);
   }
@@ -146,7 +146,7 @@ router.put("/:id", roles([ "teacher", "admin" ]), asyncMiddleware(async (req, re
 
 
   test = await test.save();
-  test = await Test
+  test = await TestSchema
     .populate(test, [
       { path: "author", select: "label _id" },
       { path: "subject", select: "code name" }
@@ -183,7 +183,7 @@ router.post("/addQuestions/:id", roles([ "admin", "teacher" ]), asyncMiddleware(
   }
 
 
-  let test = await Test.findById(id);
+  let test = await TestSchema.findById(id);
   if (!test) {
     return errors.notFound(res, [ "test" ]);
   }
@@ -195,7 +195,7 @@ router.post("/addQuestions/:id", roles([ "admin", "teacher" ]), asyncMiddleware(
   test.questions.push(...questions);
 
   test = await test.save();
-  test = await Test
+  test = await TestSchema
     .populate(test, [
       { path: "author", select: "label _id" },
       { path: "subject", select: "code name" }

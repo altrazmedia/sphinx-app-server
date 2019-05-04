@@ -3,13 +3,13 @@ const express = require("express");
 const error = require("../middleware/error");
 const auth  = require("../middleware/auth");
 
-const subjects = require("../routes/subjects");
-const session  = require("../routes/session");
-const users    = require("../routes/users");
-const groups   = require("../routes/groups");
-const classes  = require("../routes/classes");
-const tests    = require("../routes/tests");
-const me       = require("../routes/me");
+const subjects     = require("../routes/subjects");
+const session      = require("../routes/session");
+const users        = require("../routes/users");
+const groups       = require("../routes/groups");
+const classes      = require("../routes/classes");
+const testsSchemas = require("../routes/testsSchemas");
+const me           = require("../routes/me");
 
 module.exports = function(app) {
   app.use(express.json());
@@ -31,8 +31,8 @@ module.exports = function(app) {
   app.use("/api/classes", auth);
   app.use("/api/classes", classes);
 
-  app.use("/api/tests", auth);
-  app.use("/api/tests", tests);
+  app.use("/api/testsSchemas", auth);
+  app.use("/api/testsSchemas", testsSchemas);
 
   app.use(error); // Error middleware
 }
