@@ -23,22 +23,13 @@ const testSchemaSchema = new mongoose.Schema({
     active: true
   },
   questions: [{
-    content: {
-      type: String,
-      required: true,
-    },
-    options: [{
-      content: {
-        type: String,
-        required: true
-      },
-      correct: {
-        type: Boolean,
-        default: false
-      }
-    }]
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Question",
+    required: true
   }]
+
 });
+
 
 const TestSchema = mongoose.model("TestSchema", testSchemaSchema);
 

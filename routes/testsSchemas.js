@@ -1,7 +1,7 @@
 const express  = require("express");
 const mongoose = require("mongoose");
 
-const { Group }   = require("../models/Group");
+const { Question }   = require("../models/Question");
 const { TestSchema }    = require("../models/TestSchema");
 const { Subject } = require("../models/Subject");
 const { User }    = require("../models/User");
@@ -60,21 +60,22 @@ router.post("/", roles([ "teacher", "admin" ]), asyncMiddleware(async (req, res)
     return errors.notFound(res, [ "subject" ]);
   }
 
-
+  const _questions = await Question.create(questions);
 
   let test = new TestSchema({
     name,
     description: description ? String(description) : undefined,
     author: __user._id,
     subject: matchedSubject._id,
-    questions
+    questions: _questions.map(question => question._id)
   });
 
   test = await test.save();
   test = await TestSchema
     .populate(test, [
       { path: "author", select: "label _id" },
-      { path: "subject", select: "code name" }
+      { path: "subject", select: "code name" },
+      { path: "questions"}
     ])
 
 
