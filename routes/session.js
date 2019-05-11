@@ -25,20 +25,22 @@ router.post("/", asyncMiddleware(async (req, res) => {
     return res.status(400).send({ required: missingFields });
   }
 
-  const user = await User.findOne({ email });
+  const user = await User
+    .findOne({ email })
+    .select("+password");
   if (!user) {
     // No user in DB with given email
-    return res.status(400).send();
+    return res.status(400).send({ message: "Wrong credentials" });
   } 
 
   const isPasswordValid = await bcrypt.compare(password, user.password);
   if (!isPasswordValid) {
     // Invalid password
-    return res.status(400).send();
+    return res.status(400).send({ message: "Wrong credentials" });
   }
 
 
-  let session = new Session({ user: user._id, expiry: SESSION_EXPIRY_IN_DAYS * 24 * 60 * 60 * 1000 });
+  let session = new Session({ user: user._id, expiry: Date.now() + SESSION_EXPIRY_IN_DAYS * 24 * 60 * 60 * 1000 });
   session = await session.save();
 
   return res.send({ session_id: session._id, expiry: session.expiry });
