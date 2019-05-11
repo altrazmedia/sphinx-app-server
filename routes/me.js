@@ -14,7 +14,7 @@ router.get("/", asyncMiddleware(async (req, res) => {
 
   const user = { ...req.body.__user._doc };
 
-  if (user.roles.includes("teacher")) {
+  if (user.role === "teacher") {
     // fetching classes this teacher is leading
     const classesLead = await Classes
       .find({ teacher: user._id })
@@ -25,7 +25,7 @@ router.get("/", asyncMiddleware(async (req, res) => {
     user.classes_lead = classesLead; 
   }
 
-  if (user.roles.includes("student")) {
+  if (user.role ===  "student") {
     // fetching classes the user is a part of
     const groups = await Group
       .find({ students: user._id });

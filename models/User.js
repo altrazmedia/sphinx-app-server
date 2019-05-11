@@ -7,11 +7,9 @@ const userSchema = new mongoose.Schema({
     unique: true,
     trim: true
   },
-  roles: {
-    type: [{
-      type: String,
-      enum: [ "student", "teacher", "admin" ]
-    }],
+  role: {
+    type: String,
+    enum: [ "student", "teacher", "admin" ],
     required: true
   },
   label: {
@@ -35,7 +33,7 @@ const userSchema = new mongoose.Schema({
 userSchema.methods.getPublicFields = function() {
   return {
     email: this.email,
-    roles: this.roles,
+    role: this.role,
     label: this.label,
     active: this.active,
     _id: this._id

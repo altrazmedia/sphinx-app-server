@@ -69,7 +69,7 @@ router.post("/", roles([ "admin" ]), asyncMiddleware(async (req, res) => {
   const matchedSubject  = await Subject.findOne({ code: subject.toLowerCase().trim(), active: true });
   if (!matchedSubject) { notFound.push("subject"); }
 
-  const matchedTeacher = await User.findOne({ _id: teacher.trim(), active: true, roles: "teacher" });
+  const matchedTeacher = await User.findOne({ _id: teacher.trim(), active: true, role: "teacher" });
   if (!matchedTeacher) { notFound.push("teacher"); }
 
 

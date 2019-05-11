@@ -11,15 +11,15 @@ const rolesMiddleware = (roles) => async (req, res, next) => {
     return sendError();
   }
 
-  const userRoles = req.body.__user.roles;
+  const userRole = req.body.__user.role;
 
   if (typeof roles === "string") {
-    if (!userRoles.includes(roles)) {
+    if (roles !== userRole) {
       return sendError();
     }
   }
   else {
-    if (!userRoles.some(role => roles.includes(role))) {
+    if (!roles.includes(userRole)) {
       return sendError();
     }
   }

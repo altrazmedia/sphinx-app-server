@@ -11,6 +11,8 @@ const { User } = require("../models/User");
 
 const router = express.Router();
 
+const availableRoles = [ "admin", "teacher", "student" ];
+
 /**
  * Getting the list of all users
  */
@@ -35,13 +37,14 @@ router.get("/", roles("admin"), asyncMiddleware(async (req, res) => {
  */
 router.post("/", roles("admin"), asyncMiddleware(async (req, res) => {
 
-  const { email, label, roles, password } = req.body;
+  const { email, label, role, password } = req.body;
 
   const missingFields = [];
 
   if (!isEmailValid(email)) { missingFields.push("email"); }
   if (!label || typeof label !== "string") { missingFields.push("label"); }
   if (!password || typeof password !== "string") { missingFields.push("password"); }
+  if (!role || typeof role !== "string") { missingFields.push("role"); }
 
   if (missingFields.length > 0) {
     // Not all required fields were provided or their type isn't valid
@@ -70,6 +73,15 @@ router.post("/", roles("admin"), asyncMiddleware(async (req, res) => {
     })
   }
 
+  if (!availableRoles.includes(role)) {
+    // Provided role is not valid
+    structureErrors.push({
+      field: "role",
+      type: "string",
+      enum: availableRoles
+    })
+  }
+
   if (structureErrors.length > 0) {
     return errors.invalidStructure(res, structureErrors);
   }
@@ -87,9 +99,6 @@ router.post("/", roles("admin"), asyncMiddleware(async (req, res) => {
   const salt = await bcrypt.genSalt(10);
   const hashed = await bcrypt.hash(password, salt);
 
-
-  // Setting the roles
-  let _roles = getRoles(roles);
   
 
   // Creating the user
@@ -97,7 +106,7 @@ router.post("/", roles("admin"), asyncMiddleware(async (req, res) => {
     email, 
     label,
     password: hashed,
-    roles: _roles
+    role
   })
 
   user = await user.save();
@@ -135,7 +144,7 @@ router.get("/:id", roles("admin"), asyncMiddleware(async (req, res) => {
 router.put("/:id", roles("admin"), asyncMiddleware(async (req, res) => {
 
   const { id } = req.params;
-  const { label, roles, email, active } = req.body;
+  const { label, role, email, active } = req.body;
 
   if (!mongoose.Types.ObjectId.isValid(id)){
     return errors.notFound(res, [ "user" ]);
@@ -144,11 +153,24 @@ router.put("/:id", roles("admin"), asyncMiddleware(async (req, res) => {
   const missingFields = [];
 
   if (label && typeof label !== "string") { missingFields.push("label"); }
+  if (role && typeof role !== "string") { missingFields.push("role"); }
   if (email && !isEmailValid(email)) { missingFields.push("email"); }
   if (active !== undefined && typeof active !== "boolean") { missingFields.push("active") }
 
   if (missingFields.length > 0) {
     return errors.requiredFields(res, missingFields);
+  }
+
+
+  if (!availableRoles.includes(role)) {
+    // Provided role is not valid
+    return errors.invalidStructure(res, [
+      {
+        field: "role",
+        type: "string",
+        enum: availableRoles
+      }
+    ]);
   }
 
 
@@ -178,11 +200,10 @@ router.put("/:id", roles("admin"), asyncMiddleware(async (req, res) => {
   }
 
 
-  const _roles = getRoles(roles);
 
   user.label = label || user.label;
   user.email = email || user.email;
-  user.roles = _roles.length > 0 ? _roles : user.roles;
+  user.role  = role  || user.role;
   user.active = active !== undefined ? active : user.active;
 
   user = await user.save();
@@ -191,16 +212,6 @@ router.put("/:id", roles("admin"), asyncMiddleware(async (req, res) => {
 
 }));
 
-
-
-const getRoles = roles => {
-  const availableRoles = [ "admin", "teacher", "student" ];
-  if (roles && roles.constructor === Array) {
-    // Applying only available roles
-    return roles.filter(role => availableRoles.includes(role));
-  }
-  return [];
-}
 
 
 /**

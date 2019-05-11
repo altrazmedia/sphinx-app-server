@@ -60,7 +60,7 @@ router.post("/", roles([ "admin" ]), asyncMiddleware(async (req, res) => {
   // Filtering only existing users with "student" role
   const matchedStudents = await User
     .where("_id").in(studentsIds)
-    .find({ roles: "student" })
+    .find({ role: "student" })
 
   
   let group = new Group({
@@ -207,7 +207,7 @@ router.put("/add-students/:code", roles([ "admin" ]), asyncMiddleware(async (req
   // Filtering only existing users with "student" role
   const matchedStudents = await User
     .where("_id").in(studentsIds)
-    .find({ roles: "student" })
+    .find({ role: "student" })
 
   group.students = [ ...new Set([ 
     ...matchedStudents.map(student => String(student._id)), 
