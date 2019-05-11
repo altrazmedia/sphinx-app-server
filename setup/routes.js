@@ -1,18 +1,20 @@
 const express = require("express");
 
-const error = require("../middleware/error");
-const auth  = require("../middleware/auth");
+const error   = require("../middleware/error");
+const auth    = require("../middleware/auth");
+const logger  = require("../middleware/logger");
 
 const subjects     = require("../routes/subjects");
 const session      = require("../routes/session");
 const users        = require("../routes/users");
 const groups       = require("../routes/groups");
-const classes      = require("../routes/classes");
+const courses      = require("../routes/courses");
 const testsSchemas = require("../routes/testsSchemas");
 const me           = require("../routes/me");
 
 module.exports = function(app) {
   app.use(express.json());
+  app.use(logger);
   
   app.use("/api/session", session);
   
@@ -28,8 +30,8 @@ module.exports = function(app) {
   app.use("/api/groups", auth);
   app.use("/api/groups", groups);
 
-  app.use("/api/classes", auth);
-  app.use("/api/classes", classes);
+  app.use("/api/courses", auth);
+  app.use("/api/courses", courses);
 
   app.use("/api/testsSchemas", auth);
   app.use("/api/testsSchemas", testsSchemas);

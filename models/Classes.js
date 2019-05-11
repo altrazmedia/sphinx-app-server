@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const classesSchema = new mongoose.Schema({
+const courseSchema = new mongoose.Schema({
   code: {
     type: String,
     unique: true,
@@ -29,6 +29,6 @@ const classesSchema = new mongoose.Schema({
   }
 });
 
-const Classes = mongoose.model("Classes", classesSchema);
+const Course = mongoose.model("Course", courseSchema);
 
-module.exports = { Classes, classesSchema };
+module.exports = { Course, courseSchema };

@@ -2,7 +2,7 @@ const express  = require("express");
 const mongoose = require("mongoose");
 
 const { Group }   = require("../models/Group");
-const { Classes } = require("../models/Classes");
+const { Course } = require("../models/Course");
 const { Subject } = require("../models/Subject");
 const { User }    = require("../models/User");
 const errors      = require("../utils/errorResponses");
@@ -12,15 +12,15 @@ const roles           = require("../middleware/roles");
 
 const router = express.Router();
 
-// TODO: Editing the classes
+// TODO: Editing the course
 
 
 /**
- * Getting the classes list
+ * Getting the list of all courses
  */
 router.get("/", roles([ "teacher", "admin" ]), asyncMiddleware(async (req, res) => {
 
-  const classes = await Classes
+  const courses = await Course
     .find()
     .populate("teacher", "_id label")
     .populate("group", "code name")
@@ -31,13 +31,13 @@ router.get("/", roles([ "teacher", "admin" ]), asyncMiddleware(async (req, res) 
       code: "asc"
     });
 
-  return res.send(classes);
+  return res.send(courses);
 
 }));
 
 
 /**
- * Adding the new classes
+ * Adding the new course
  */
 router.post("/", roles([ "admin" ]), asyncMiddleware(async (req, res) => {
 
@@ -45,7 +45,7 @@ router.post("/", roles([ "admin" ]), asyncMiddleware(async (req, res) => {
     teacher,  // User id
     group,    // Group code
     subject,  // Subject code
-    code      // unique classes code
+    code      // unique course code
   } = req.body;
 
   const missingFields = [];
@@ -78,30 +78,30 @@ router.post("/", roles([ "admin" ]), asyncMiddleware(async (req, res) => {
   }
 
 
-  const matchedByCode = await Classes.findOne({ code: code.toLowerCase().trim() });
+  const matchedByCode = await Course.findOne({ code: code.toLowerCase().trim() });
   if (matchedByCode) {
-    // There already is a different class with that code
+    // There already is a different course with that code
     return errors.duplicate(res, [ "code" ]);
   }
 
 
-  let classes = new Classes({
+  let course = new Course({
     code,
     teacher,
     group: matchedGroup._id,
     subject: matchedSubject._id
   });
 
-  classes = await classes.save();
-  classes = await Classes
-    .populate(classes, [
+  course = await course.save();
+  course = await Course
+    .populate(course, [
       { path: "teacher", select: "_id label" },
       { path: "subject", select: "code name" },
       { path: "group", select: "code name" },
     ])
 
 
-  return res.send(classes)
+  return res.send(course)
   
 
 
