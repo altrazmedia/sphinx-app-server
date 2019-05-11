@@ -1,4 +1,6 @@
 const express = require("express");
+const cors    = require("cors");
+
 const logger  = require("./utils/logger");
 
 const config  = require("./setup/config");
@@ -7,6 +9,7 @@ const routes  = require("./setup/routes");
 
 const app = express();
 
+app.use(cors());
 config();
 db();
 routes(app);
