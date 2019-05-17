@@ -138,7 +138,7 @@ router.put("/:id", roles([ "teacher", "admin" ]), asyncMiddleware(async (req, re
     return errors.notFound(res, [ "test" ]);
   }
 
-  if (!__user.roles.includes("admin") || String(__user._id) !== String(test.author)) {
+  if (__user.role !== "admin" || String(__user._id) !== String(test.author)) {
     return res.status(403).send({ message: "Only administrators and author of the test can edit it's data" })
   }
 
@@ -189,7 +189,7 @@ router.post("/addQuestions/:id", roles([ "admin", "teacher" ]), asyncMiddleware(
     return errors.notFound(res, [ "test" ]);
   }
 
-  if (!__user.roles.includes("admin") || String(__user._id) !== String(test.author)) {
+  if (__user.role !== "admin" || String(__user._id) !== String(test.author)) {
     return res.status(403).send({ message: "Only administrators and author of the test can edit it's data" })
   }
 
