@@ -15,8 +15,12 @@ const router = express.Router();
 
 router.get("/", roles([ "teacher", "admin" ]), asyncMiddleware(async (req, res) => {
 
+  // Finding by subject id if 'subject' query param is provided
+  const findObj = req.query.subject ? 
+    { subject: req.query.subject } : {};
+  
   const tests = await TestSchema
-    .find()
+    .find(findObj)
     .populate("subject", "code name")
     .populate("author", "label")
 
