@@ -103,7 +103,8 @@ router.get("/:id", roles([ "teacher", "admin" ]), asyncMiddleware(async (req, re
   const test = await TestSchema
     .findById(id)
     .populate("author", "label _id")
-    .populate("subject", "code name");
+    .populate("subject", "code name")
+    .populate("questions")
 
   if (!test) {
     return errors.notFound(res, [ "test" ])
