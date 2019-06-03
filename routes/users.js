@@ -16,7 +16,7 @@ const availableRoles = [ "admin", "teacher", "student" ];
 /**
  * Getting the list of all users
  */
-router.get("/", roles("admin"), asyncMiddleware(async (req, res) => {
+router.get("/", asyncMiddleware(async (req, res) => {
 
   const users = await User
     .find()
