@@ -1,9 +1,10 @@
 const express  = require("express");
 const mongoose = require("mongoose");
 
-const { Group } = require("../models/Group");
-const { User }  = require("../models/User");
-const errors    = require("../utils/errorResponses");
+const { Group }  = require("../models/Group");
+const { User }   = require("../models/User");
+const { Course } = require("../models/Course");
+const errors     = require("../utils/errorResponses");
 
 const asyncMiddleware = require("../middleware/asyncMiddleware");
 const roles           = require("../middleware/roles");
@@ -84,13 +85,24 @@ router.get("/:code", roles([ "admin", "teacher" ]), asyncMiddleware(async (req, 
 
   const { code } = req.params;
 
-  const group = await Group
+  let group = await Group
     .findOne({ code: code.trim().toLowerCase() })
     .populate("students")
   
   if (!group) {
     return errors.notFound(res, [ "group" ]);
   }
+
+  group = group.toObject();
+
+  // Finding cuorses assigned to this group
+  const matchedCourses = await Course
+    .find({ group: group._id })
+    .select("teacher subject code")
+    .populate("teacher")
+    .populate("subject");
+  
+  group.courses = matchedCourses;
 
   return res.send(group);
 
