@@ -10,6 +10,7 @@ const users        = require("../routes/users");
 const groups       = require("../routes/groups");
 const courses      = require("../routes/courses");
 const testsSchemas = require("../routes/testsSchemas");
+const tests        = require("../routes/tests");
 const me           = require("../routes/me");
 
 module.exports = function(app) {
@@ -35,6 +36,9 @@ module.exports = function(app) {
 
   app.use("/api/testsSchemas", auth);
   app.use("/api/testsSchemas", testsSchemas);
+
+  app.use("/api/tests", auth);
+  app.use("/api/tests", tests);
 
   app.use(error); // Error middleware
 }
