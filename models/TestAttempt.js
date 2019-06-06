@@ -24,7 +24,17 @@ const testAttemptSchema = new mongoose.Schema({
       type: mongoose.Schema.Types.ObjectId
     }]
   }]
+},
+{
+  toJSON: { virtuals: true },
+  toObject: { virtuals: true }
 });
+
+
+testAttemptSchema.virtual("answered").get(function() {
+  // Adding virtual `answered` field with number of already answered questions
+  return this.questions.filter(question => question.answer.length > 0).length
+})
 
 const TestAttempt = mongoose.model("TestAttempt", testAttemptSchema);
 
