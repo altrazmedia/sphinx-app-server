@@ -12,6 +12,7 @@ const courses      = require("../routes/courses");
 const testsSchemas = require("../routes/testsSchemas");
 const tests        = require("../routes/tests");
 const me           = require("../routes/me");
+const dev          = require("../routes/dev");
 
 module.exports = function(app) {
   app.use(express.json());
@@ -39,6 +40,8 @@ module.exports = function(app) {
 
   app.use("/api/tests", auth);
   app.use("/api/tests", tests);
+
+  app.use("/api/dev", dev);
 
   app.use(error); // Error middleware
 }
