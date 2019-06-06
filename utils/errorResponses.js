@@ -13,9 +13,10 @@ function invalidStructure(res, fields) {
   })
 }
 
-function notFound(res, props) {
+function notFound(res, props, additional = {}) {
   return res.status(404).send({
-    notfound: props
+    notfound: props,
+    ...additional
   })
 }
 
