@@ -1,25 +1,9 @@
-const express  = require("express");
 const bcrypt   = require("bcrypt");
 
-const { User } = require("../models/User");
+const { User } = require("../../models/User");
 
-const asyncMiddleware = require("../middleware/asyncMiddleware");
-
-
-const router = express.Router();
-
-
-router.get("/test", (req, res) => {
-  res.send({
-    message: "Hello there!"
-  })
-});
-
-
-// Creating the new admin account
-// For dev purposes only
-router.post("/create-admin", asyncMiddleware(async (req, res) => {
-
+/** Creating the admin account */
+module.exports = async function(req, res) {
   const email = "admin@test.pl";
   const password = "admin";
 
@@ -51,8 +35,4 @@ router.post("/create-admin", asyncMiddleware(async (req, res) => {
     email,
     password
   })
-    
-}));
-
-
-module.exports = router;
+}

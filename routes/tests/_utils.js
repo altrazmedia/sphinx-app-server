@@ -1,4 +1,4 @@
-const { TestAttempt } = require("../models/TestAttempt");
+const { TestAttempt } = require("../../models/TestAttempt");
 
 async function getTestAttempts(testAttemptFindObj, questions, getScores, getQuestionScores = false) {
   let attempts = await TestAttempt
