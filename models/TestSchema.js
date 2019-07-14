@@ -18,10 +18,6 @@ const testSchemaSchema = new mongoose.Schema({
     ref: "Subject",
     required: true
   },
-  active: {
-    type: Boolean, 
-    active: true
-  },
   questions: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: "Question",

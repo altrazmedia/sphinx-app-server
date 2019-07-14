@@ -6,13 +6,12 @@ const errors     = require("../../utils/errorResponses");
  */
 module.exports = async function(req, res) {
   
-  const { active, name, code: code_new } = req.body;
+  const { name, code: code_new } = req.body;
   const { code } = req.params;
 
   const missingFields = [];
   if (name && typeof name !== "string") { missingFields.push("name"); }
   if (code_new && typeof code_new !== "string") { missingFields.push("code"); }
-  if (active !== undefined && typeof active !== "boolean") { missingFields.push("active"); }
 
   if (missingFields.length > 0) {
     // Some of the required fields are not provided or their type is not valid
@@ -40,7 +39,6 @@ module.exports = async function(req, res) {
   
   group.name = name || group.name;
   group.code = code_new || group.code;
-  group.active = active !== undefined ? active : group.active;
 
   group = await group.save();
 

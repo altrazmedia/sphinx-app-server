@@ -15,11 +15,7 @@ const groupSchema = new mongoose.Schema({
   students: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: "User"
-  }],
-  active: {
-    type: Boolean,
-    default: true
-  }
+  }]
 });
 
 const Group = mongoose.model("Group", groupSchema);

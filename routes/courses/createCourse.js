@@ -28,13 +28,13 @@ module.exports = async function(req, res) {
 
   const notFound = [];
   
-  const matchedGroup    = await Group.findOne({ code: group.toLowerCase().trim(), active: true });
+  const matchedGroup    = await Group.findOne({ code: group.toLowerCase().trim() });
   if (!matchedGroup) { notFound.push("group"); }
 
-  const matchedSubject  = await Subject.findOne({ code: subject.toLowerCase().trim(), active: true });
+  const matchedSubject  = await Subject.findOne({ code: subject.toLowerCase().trim() });
   if (!matchedSubject) { notFound.push("subject"); }
 
-  const matchedTeacher = await User.findOne({ _id: teacher.trim(), active: true, role: "teacher" });
+  const matchedTeacher = await User.findOne({ _id: teacher.trim(), role: "teacher" });
   if (!matchedTeacher) { notFound.push("teacher"); }
 
   if (notFound.length > 0) {

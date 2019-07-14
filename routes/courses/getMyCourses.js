@@ -17,8 +17,7 @@ module.exports = async function(req, res) {
     })
     .populate("teacher", "label")
     .populate("group", "name code")
-    .populate("subject", "name code")
-    .sort({ active: "desc" })
+    .populate("subject", "name code");
 
   return res.send(courses);
 }

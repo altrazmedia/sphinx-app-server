@@ -7,10 +7,7 @@ module.exports = async function(req, res) {
   .find()
   .collation({ locale: "en" })
   .select("-password")
-  .sort({
-    active: "desc",
-    label: "asc" 
-  });
+  .sort({ label: "asc" });
 
   return res.send(users)
 

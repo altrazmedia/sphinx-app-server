@@ -8,7 +8,6 @@ module.exports = async function(req, res) {
     .populate("group", "code name")
     .populate("subject", "code name")
     .sort({
-      active: "desc",
       name: "asc",
       code: "asc"
     });

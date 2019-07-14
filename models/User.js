@@ -23,10 +23,6 @@ const userSchema = new mongoose.Schema({
     minlength: 5,
     maxlength: 1024,
     select: false
-  },
-  active: {
-    type: Boolean,
-    default: true
   }
 });
 
@@ -35,7 +31,6 @@ userSchema.methods.getPublicFields = function() {
     email: this.email,
     role: this.role,
     label: this.label,
-    active: this.active,
     _id: this._id
   }
 }

@@ -8,8 +8,7 @@ module.exports = async function(req, res) {
     .find({ teacher: __user._id })
     .populate("teacher", "label")
     .populate("group", "name code")
-    .populate("subject", "name code")
-    .sort({ active: "desc" })
+    .populate("subject", "name code");
 
   return res.send(courses);
 }
