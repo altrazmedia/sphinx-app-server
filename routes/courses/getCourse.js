@@ -2,6 +2,8 @@ const { Course } = require("../../models/Course");
 const { Test }   = require("../../models/Test");
 const errors     = require("../../utils/errorResponses");
 
+const { getTestAttempts } = require("../tests/_utils");
+
 /** Getting the single course info */
 module.exports = async function(req, res) {
   const { __user } = req.body; // Requester
