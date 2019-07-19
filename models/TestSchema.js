@@ -23,7 +23,15 @@ const testSchemaSchema = new mongoose.Schema({
     ref: "Question",
     required: true
   }]
+},
+{
+  toJSON: { virtuals: true },
+  toObject: { virtuals: true }
+});
 
+testSchemaSchema.virtual("created").get(function() {
+  // adding the `created` virutal field with the creation date
+  return this._id.getTimestamp();
 });
 
 

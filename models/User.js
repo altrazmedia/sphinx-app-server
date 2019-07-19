@@ -24,14 +24,25 @@ const userSchema = new mongoose.Schema({
     maxlength: 1024,
     select: false
   }
+},
+{
+  toJSON: { virtuals: true },
+  toObject: { virtuals: true }
 });
+
+userSchema.virtual("created").get(function() {
+  // adding the `created` virutal field with the creation date
+  return this._id.getTimestamp();
+});
+
 
 userSchema.methods.getPublicFields = function() {
   return {
     email: this.email,
     role: this.role,
     label: this.label,
-    _id: this._id
+    _id: this._id,
+    created: this.created
   }
 }
 
