@@ -10,8 +10,8 @@ const editSubject = require("./editSubject");
 
 const router = express.Router();
 
-router.get("/", asyncMiddleware(getSubjectsList));
-router.get("/:code", asyncMiddleware(getSubject));
+router.get("/list", asyncMiddleware(getSubjectsList));
+router.get("/single/:code", asyncMiddleware(getSubject));
 router.post("/", roles("admin"), asyncMiddleware(createSubject));
 router.put("/:code", roles("admin"), asyncMiddleware(editSubject));
 

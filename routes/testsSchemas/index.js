@@ -9,8 +9,8 @@ const createTestSchema = require("./createTestSchema");
 
 const router = express.Router();
 
-router.get("/", roles(["teacher"]), asyncMiddleware(getTestsSchemasList));
-router.get("/:id", roles(["teacher"]), asyncMiddleware(getTestSchema));
+router.get("/list", roles(["teacher"]), asyncMiddleware(getTestsSchemasList));
+router.get("/single/:id", roles(["teacher"]), asyncMiddleware(getTestSchema));
 router.post("/", roles(["teacher"]), asyncMiddleware(createTestSchema));
 
 module.exports = router;

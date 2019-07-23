@@ -12,19 +12,11 @@ const addStudentsToGroup = require("./addStudentsToGroup");
 
 const router = express.Router();
 
-router.get("/", roles(["admin", "teacher"]), asyncMiddleware(getGroupsList));
-router.get("/:code", roles(["admin", "teacher"]), asyncMiddleware(getGroup));
+router.get("/list", roles(["admin", "teacher"]), asyncMiddleware(getGroupsList));
+router.get("/single/:code", roles(["admin", "teacher"]), asyncMiddleware(getGroup));
 router.post("/", roles(["admin"]), asyncMiddleware(createGroup));
-router.put("/:code", roles(["admin"]), asyncMiddleware(editGroup));
-router.put(
-  "/remove-students/:code",
-  roles(["admin"]),
-  asyncMiddleware(removeStudentsFromGroup)
-);
-router.put(
-  "/add-students/:code",
-  roles(["admin"]),
-  asyncMiddleware(addStudentsToGroup)
-);
+router.put("/edit/:code", roles(["admin"]), asyncMiddleware(editGroup));
+router.put("/remove-students/:code", roles(["admin"]), asyncMiddleware(removeStudentsFromGroup));
+router.put("/add-students/:code", roles(["admin"]), asyncMiddleware(addStudentsToGroup));
 
 module.exports = router;

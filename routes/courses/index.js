@@ -11,7 +11,7 @@ const getMyLeadCourses = require("./getMyLeadCourses");
 
 const router = express.Router();
 
-router.get("/", roles(["teacher", "admin"]), asyncMiddleware(getCoursesList));
+router.get("/list", roles(["teacher", "admin"]), asyncMiddleware(getCoursesList));
 router.get("/single/:code", asyncMiddleware(getCourse));
 router.post("/", roles(["admin"]), asyncMiddleware(createCourse));
 router.get("/my", asyncMiddleware(getMyCourses));

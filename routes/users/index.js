@@ -9,8 +9,8 @@ const createUser = require("./createUser");
 
 const router = express.Router();
 
-router.get("/", asyncMiddleware(getUsersList));
-router.get("/:id", asyncMiddleware(getUser));
+router.get("/list", asyncMiddleware(getUsersList));
+router.get("/single/:id", asyncMiddleware(getUser));
 router.post("/", roles("admin"), asyncMiddleware(createUser));
 
 module.exports = router;
