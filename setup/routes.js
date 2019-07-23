@@ -1,28 +1,28 @@
 const express = require("express");
 
-const error   = require("../middleware/error");
-const auth    = require("../middleware/auth");
-const logger  = require("../middleware/logger");
+const error = require("../middleware/error");
+const auth = require("../middleware/auth");
+const logger = require("../middleware/logger");
 
-const subjects     = require("../routes/subjects");
-const session      = require("../routes/session");
-const users        = require("../routes/users");
-const groups       = require("../routes/groups");
-const courses      = require("../routes/courses");
+const subjects = require("../routes/subjects");
+const session = require("../routes/session");
+const users = require("../routes/users");
+const groups = require("../routes/groups");
+const courses = require("../routes/courses");
 const testsSchemas = require("../routes/testsSchemas");
-const tests        = require("../routes/tests");
-const me           = require("../routes/me");
-const dev          = require("../routes/dev");
+const tests = require("../routes/tests");
+const me = require("../routes/me");
+const dev = require("../routes/dev");
 
 module.exports = function(app) {
   app.use(express.json());
   app.use(logger);
-  
+
   app.use("/api/session", session);
-  
+
   app.use("/api/me", auth);
   app.use("/api/me", me);
-  
+
   app.use("/api/subjects", auth);
   app.use("/api/subjects", subjects);
 
@@ -44,4 +44,4 @@ module.exports = function(app) {
   app.use("/api/dev", dev);
 
   app.use(error); // Error middleware
-}
+};

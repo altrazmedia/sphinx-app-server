@@ -1,5 +1,5 @@
 const { Course } = require("../../models/Course");
-const { Group }  = require("../../models/Group");
+const { Group } = require("../../models/Group");
 
 /** Getting the list of courses the logged user is part of */
 module.exports = async function(req, res) {
@@ -9,15 +9,14 @@ module.exports = async function(req, res) {
   const groups = await Group.find({ students: __user._id });
 
   // Getting the list of courses asigned to user's groups
-  const courses = await Course
-    .find({ 
-      group: { 
-        "$in": groups.map(group => group._id) 
-      } 
-    })
+  const courses = await Course.find({
+    group: {
+      $in: groups.map(group => group._id)
+    }
+  })
     .populate("teacher", "label")
     .populate("group", "name code")
     .populate("subject", "name code");
 
   return res.send(courses);
-}
+};

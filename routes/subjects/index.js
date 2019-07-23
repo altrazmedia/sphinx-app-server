@@ -1,12 +1,12 @@
-const express  = require("express");
+const express = require("express");
 
 const asyncMiddleware = require("../../middleware/asyncMiddleware");
 const roles = require("../../middleware/roles");
 
 const getSubjectsList = require("./getSubjectsList");
-const getSubject      = require("./getSubject");
-const createSubject   = require("./createSubject");
-const editSubject     = require("./editSubject");
+const getSubject = require("./getSubject");
+const createSubject = require("./createSubject");
+const editSubject = require("./editSubject");
 
 const router = express.Router();
 

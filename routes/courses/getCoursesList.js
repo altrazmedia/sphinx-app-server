@@ -2,8 +2,7 @@ const { Course } = require("../../models/Course");
 
 /** Getting the list of all courses */
 module.exports = async function(req, res) {
-  const courses = await Course
-    .find()
+  const courses = await Course.find()
     .populate("teacher", "_id label")
     .populate("group", "code name")
     .populate("subject", "code name")
@@ -13,4 +12,4 @@ module.exports = async function(req, res) {
     });
 
   return res.send(courses);
-}
+};

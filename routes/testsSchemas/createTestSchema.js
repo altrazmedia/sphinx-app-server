@@ -1,7 +1,10 @@
-const { Question }   = require("../../models/Question");
+/* eslint-disable no-restricted-syntax */
+/* eslint-disable guard-for-in */
+/* eslint-disable no-continue */
+const { Question } = require("../../models/Question");
 const { TestSchema } = require("../../models/TestSchema");
-const { Subject }    = require("../../models/Subject");
-const errors         = require("../../utils/errorResponses");
+const { Subject } = require("../../models/Subject");
+const errors = require("../../utils/errorResponses");
 
 /** Creating a new test schema */
 module.exports = async function(req, res) {
@@ -15,24 +18,32 @@ module.exports = async function(req, res) {
 
   const missingFields = [];
 
-  if (!name || typeof name !== "string") { missingFields.push("name"); }
-  if (!subject || typeof subject !== "string") { missingFields.push("subject"); }
+  if (!name || typeof name !== "string") {
+    missingFields.push("name");
+  }
+  if (!subject || typeof subject !== "string") {
+    missingFields.push("subject");
+  }
 
-  if (questions && questions.constructor !== Array) { missingFields.push("questions"); }
-  else if (questions) {
-    const invalidQuestions = questionsValidation(questions)
-    missingFields.push(...invalidQuestions.map(questionNumber => `question-${questionNumber}`))
+  if (questions && questions.constructor !== Array) {
+    missingFields.push("questions");
+  } else if (questions) {
+    const invalidQuestions = questionsValidation(questions);
+    missingFields.push(
+      ...invalidQuestions.map(questionNumber => `question-${questionNumber}`)
+    );
   }
 
   if (missingFields.length > 0) {
     return errors.requiredFields(res, missingFields);
   }
 
-
-  const matchedSubject = await Subject.findOne({ code: subject.toLowerCase().trim() });
+  const matchedSubject = await Subject.findOne({
+    code: subject.toLowerCase().trim()
+  });
   if (!matchedSubject) {
     // There is no subject with given code
-    return errors.notFound(res, [ "subject" ]);
+    return errors.notFound(res, ["subject"]);
   }
 
   const _questions = await Question.create(questions);
@@ -46,25 +57,22 @@ module.exports = async function(req, res) {
   });
 
   test = await test.save();
-  test = await TestSchema
-    .populate(test, [
-      { path: "author", select: "label _id" },
-      { path: "subject", select: "code name" },
-      { path: "questions"}
-    ])
-
+  test = await TestSchema.populate(test, [
+    { path: "author", select: "label _id" },
+    { path: "subject", select: "code name" },
+    { path: "questions" }
+  ]);
 
   return res.send(test);
-}
-
+};
 
 function questionsValidation(questions) {
   const invalidQuestions = [];
-    
-  for (let index in questions) {
+
+  for (const index in questions) {
     const question = questions[index];
 
-    if (!question.content || typeof question.content !== "string") { 
+    if (!question.content || typeof question.content !== "string") {
       invalidQuestions.push(Number(index) + 1);
       continue;
     }
@@ -76,23 +84,25 @@ function questionsValidation(questions) {
 
     let isCorrectAnswer = false; // Checking if there is at least one correct answer
     let isValidOption = true;
-    for (let option of question.options) {
-      if (!option.content || typeof question.content !== "string" || typeof option.correct !== "boolean") {
+    for (const option of question.options) {
+      if (
+        !option.content ||
+        typeof question.content !== "string" ||
+        typeof option.correct !== "boolean"
+      ) {
         isValidOption = false;
         break;
       }
 
       if (option.correct === true) {
-        isCorrectAnswer = true
+        isCorrectAnswer = true;
       }
     }
 
-    if (!isValidOption || !isCorrectAnswer) { 
-      invalidQuestions.push(Number(index) + 1)
+    if (!isValidOption || !isCorrectAnswer) {
+      invalidQuestions.push(Number(index) + 1);
     }
-
   }
 
   return invalidQuestions;
-
 }

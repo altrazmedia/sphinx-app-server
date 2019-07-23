@@ -1,10 +1,10 @@
-const express  = require("express");
+const express = require("express");
 
 const asyncMiddleware = require("../../middleware/asyncMiddleware");
-const auth            = require("../../middleware/auth");
+const auth = require("../../middleware/auth");
 
-const login        = require("./login");
-const logout       = require("./logout");
+const login = require("./login");
+const logout = require("./logout");
 const checkSession = require("./checkSession");
 
 const router = express.Router();

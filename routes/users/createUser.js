@@ -1,9 +1,9 @@
-const bcrypt   = require("bcrypt");
+const bcrypt = require("bcrypt");
 
-const errors   = require("../../utils/errorResponses");
+const errors = require("../../utils/errorResponses");
 const { User } = require("../../models/User");
 
-const availableRoles = [ "admin", "teacher", "student" ];
+const availableRoles = ["admin", "teacher", "student"];
 
 /** Creating a new user */
 module.exports = async function(req, res) {
@@ -11,10 +11,18 @@ module.exports = async function(req, res) {
 
   const missingFields = [];
 
-  if (!isEmailValid(email)) { missingFields.push("email"); }
-  if (!label || typeof label !== "string") { missingFields.push("label"); }
-  if (!password || typeof password !== "string") { missingFields.push("password"); }
-  if (!role || typeof role !== "string") { missingFields.push("role"); }
+  if (!isEmailValid(email)) {
+    missingFields.push("email");
+  }
+  if (!label || typeof label !== "string") {
+    missingFields.push("label");
+  }
+  if (!password || typeof password !== "string") {
+    missingFields.push("password");
+  }
+  if (!role || typeof role !== "string") {
+    missingFields.push("role");
+  }
 
   if (missingFields.length > 0) {
     // Not all required fields were provided or their type isn't valid
@@ -30,7 +38,7 @@ module.exports = async function(req, res) {
       type: "string",
       min_length: 5,
       max_length: 50
-    })
+    });
   }
 
   if (label.length < 5 || label.length > 50) {
@@ -40,7 +48,7 @@ module.exports = async function(req, res) {
       type: "string",
       min_length: 3,
       max_length: 40
-    })
+    });
   }
 
   if (!availableRoles.includes(role)) {
@@ -49,47 +57,43 @@ module.exports = async function(req, res) {
       field: "role",
       type: "string",
       enum: availableRoles
-    })
+    });
   }
 
   if (structureErrors.length > 0) {
     return errors.invalidStructure(res, structureErrors);
   }
 
-
-
   // Checking if there already is a user with that email address
   const matchedByEmail = await User.findOne({ email });
   if (matchedByEmail) {
-    return errors.duplicate(res, [ "email" ])
+    return errors.duplicate(res, ["email"]);
   }
-
 
   // Hashing the password
   const salt = await bcrypt.genSalt(10);
   const hashed = await bcrypt.hash(password, salt);
 
-  
-
   // Creating the user
   let user = new User({
-    email, 
+    email,
     label,
     password: hashed,
     role
-  })
+  });
 
   user = await user.save();
 
-  return res.send(user.getPublicFields())
-}
+  return res.send(user.getPublicFields());
+};
 
 /**
  * Checking if given string is a valid email address
- * @param {String} email 
+ * @param {String} email
  */
 const isEmailValid = email => {
+  // eslint-disable-next-line no-useless-escape
   const reg = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-  
+
   return typeof email === "string" && reg.test(email);
-}
+};

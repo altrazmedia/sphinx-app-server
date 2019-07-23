@@ -1,7 +1,7 @@
-const express  = require("express");
+const express = require("express");
 
 const asyncMiddleware = require("../../middleware/asyncMiddleware");
-const createAdmin     = require("./createAdmin");
+const createAdmin = require("./createAdmin");
 
 const router = express.Router();
 

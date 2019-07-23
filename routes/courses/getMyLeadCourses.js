@@ -4,11 +4,10 @@ const { Course } = require("../../models/Course");
 module.exports = async function(req, res) {
   const { __user } = req.body; // Requester
 
-  const courses = await Course
-    .find({ teacher: __user._id })
+  const courses = await Course.find({ teacher: __user._id })
     .populate("teacher", "label")
     .populate("group", "name code")
     .populate("subject", "name code");
 
   return res.send(courses);
-}
+};

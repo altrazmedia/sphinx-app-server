@@ -10,12 +10,14 @@ const groupSchema = new mongoose.Schema({
   },
   name: {
     type: String,
-    required: true,
+    required: true
   },
-  students: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User"
-  }]
+  students: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User"
+    }
+  ]
 });
 
 const Group = mongoose.model("Group", groupSchema);
