@@ -1,4 +1,5 @@
 const bcrypt   = require("bcrypt");
+const moment   = require("moment");
 
 const { User }    = require("../../models/User");
 const { Session } = require("../../models/Session");
@@ -34,8 +35,9 @@ module.exports = async function(req, res) {
     return res.status(400).send({ message: "Wrong credentials", reason: "wrong_credentials" });
   }
 
+  const expirationDate = moment().add(SESSION_EXPIRY_IN_DAYS, "d").utc().toJSON(); // session expiration date (UTC)
 
-  let session = new Session({ user: user._id, expiry: Date.now() + SESSION_EXPIRY_IN_DAYS * 24 * 60 * 60 * 1000 });
+  let session = new Session({ user: user._id, expiry: expirationDate });
   session = await session.save();
 
   return res.send({ session_id: session._id, expiry: session.expiry });
